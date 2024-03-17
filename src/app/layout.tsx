@@ -4,7 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import React from "react";
 import {ToastContainer} from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import {CookiesProvider} from "next-client-cookies/server";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -20,11 +21,13 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-		    <body className={inter.className}>
-		        <Navbar/>
-		        <ToastContainer />
-		        {children}
-		    </body>
+		<body className={inter.className}>
+		<CookiesProvider>
+			<Navbar/>
+			<ToastContainer/>
+			{children}
+		</CookiesProvider>
+		</body>
 		</html>
 	);
 }

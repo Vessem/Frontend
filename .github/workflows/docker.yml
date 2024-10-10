@@ -6,14 +6,10 @@ name: Docker
 # documentation.
 
 on:
-  schedule:
-    - cron: '38 21 * * *'
   push:
     branches: [ 'main' ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ 'main' ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -24,14 +20,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [ 20.x ]
-    
-    env:
-      HUSKY: 0
-    
     permissions:
       contents: read
       packages: write
@@ -41,25 +29,15 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      # Build application before creating container
-      - name: Build with Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm pkg delete scripts.prepare # Delete prepare script to disable husky
-      - run: npm ci --omit=dev
-      - run: npm run build --if-present --omit=dev
+        uses: actions/checkout@v4
       
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
+        uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
         with:
-          cosign-release: 'v2.1.1'
+          cosign-release: 'v2.2.4'
       
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache

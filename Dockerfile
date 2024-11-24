@@ -10,7 +10,8 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN corepack enable \
     && yarn set version 4.5.0 \
-    && yarn --immutable
+    && yarn --immutable \
+	&& yarn workspace focus
 
 # Rebuild the source code only when needed
 FROM base AS builder
